@@ -36,6 +36,7 @@ public class AccessibilityTest {
     @Test
     public void verifyAllUrls() throws JSONException, InterruptedException {
 
+        webdriverInit();
 //        List<String> tags = Arrays.asList(
 //                "wcag2a",
 //                "wcag2aa",
@@ -83,9 +84,6 @@ public class AccessibilityTest {
                 "wcag334"
         );
 
-        tag = "wcag2a";
-
-        webdriverInit();
         List<String> urls = Arrays.asList(
                 "https://www.w3.org/WAI/demos/bad/before/home.html",
                 "https://broken-workshop.dequelabs.com/",
@@ -102,9 +100,14 @@ public class AccessibilityTest {
         for (String tag : tags) {
             this.tag = tag;
             for (String url : urls) {
+
                 navigationUrl = url;
                 driver.navigate().to(navigationUrl);
+
+                // Get the page name for the report
                 pageName = getPageNameFromUrl(navigationUrl);
+
+                // Accessibikity verification
                 if (!verifyAlly(pageName, this.tag)) {
                     System.out.println("There are "+tagValue+" accessibility errors :" + driver.getCurrentUrl());
                 } else {
@@ -115,6 +118,7 @@ public class AccessibilityTest {
         driver.quit();
     }
 
+    // Geting the page name from the URL
     private String getPageNameFromUrl(String url) {
         if (url.contains("before/home.html")) {
             return "BeforeAndAfter";
@@ -130,8 +134,6 @@ public class AccessibilityTest {
             return "WebAccessibilityDemo";
         } else if (url.contains("iflysouthern.com")) {
             return "Southern";
-        } else if (url.contains("jacaranda.com.au/shop")) {
-            return "JPQA";
         } else {
             return "Unknown";
         }
@@ -145,20 +147,18 @@ public class AccessibilityTest {
         driver = new ChromeDriver(options);
     }
 
+    // Accessibility verification
     public static boolean verifyAlly(String page,String tag) throws JSONException, InterruptedException {
 
+        // Implementation of the tag value
         String options = "{ runOnly: { type: 'tag', values: ['"+tag+"'] } }";
         JSONObject optionsJson = new JSONObject(options);
         tagValue = optionsJson.getJSONObject("runOnly").getJSONArray("values").getString(0);
 
-//        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{runOnly:['wcag21aa']}").analyze();
-//        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] } }").analyze();
-//        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } }").analyze();
+        // Accessibility verification
         JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options(options).analyze();
-//        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag131'] } }").analyze();
-//        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).analyze();
-
         JSONArray violations = responseJson.getJSONArray("violations");
+
         if (violations.length() == 0 ) {
             logger.info("There are no "+tagValue+" accessibility errors");
             passStatus = true;
@@ -172,6 +172,7 @@ public class AccessibilityTest {
         return passStatus;
     }
 
+    // Convert JSON to HTML report
     public static void axeJsonToHtml(JSONArray violations,String page){
         try (FileWriter file = new FileWriter(targetFolderFilePath+tagValue+page+"allyTestReport.html")) {
             file.write("<html><head><title>Accessibility Report</title></head><body>");
