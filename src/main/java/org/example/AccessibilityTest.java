@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -30,44 +32,54 @@ public class AccessibilityTest {
 
 
     @Test
-    public void verifyAllyTest() throws JSONException, InterruptedException {
-
+    public void verifyAllUrls() throws JSONException, InterruptedException {
         webdriverInit();
+        List<String> urls = Arrays.asList(
+                "https://www.w3.org/WAI/demos/bad/before/home.html",
+                "https://broken-workshop.dequelabs.com/",
+                "https://dequeuniversity.com/demo/dream",
+                "https://webtestingcourse.dequecloud.com/",
+                "https://dequeuniversity.com/demo/mars/",
+                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo",
+                "https://www.iflysouthern.com/",
+                "https://www.jacaranda.com.au/shop/"
+        );
 
-        String url1 = "https://www.w3.org/WAI/demos/bad/before/home.html";
-        String url2 = "https://broken-workshop.dequelabs.com/";
-        String url3 = "https://dequeuniversity.com/demo/dream";
-        String url4 = "https://webtestingcourse.dequecloud.com/";
-        String url5 = "https://dequeuniversity.com/demo/mars/";
-        String url6 = "https://www.calstatela.edu/drupaltraining/web-accessibility-demo";
-
-        navigationUrl = url6;
-
-        driver.navigate().to(navigationUrl);
-
-        if(navigationUrl == url1){
-            pageName = "BeforeAndAfter";
-        }else if(navigationUrl == url2){
-            pageName = "BrokenWorkshop";
-        }else if(navigationUrl == url3){
-            pageName = "Dream";
-        }else if(navigationUrl == url4){
-            pageName = "WebTestingCourse";
-        }else if(navigationUrl == url5){
-            pageName = "Mars";
-        }else if(navigationUrl == url6){
-            pageName = "WebAccessibilityDemo";
-        }
-
-        System.out.println("Current URL: " + driver.getCurrentUrl());
-        if(verifyAlly(pageName) == false){
-            System.out.println("There are accessibility errors in : " + driver.getCurrentUrl());
-        }else{
-            System.out.println("There are no accessibility errors in : " + driver.getCurrentUrl());
+        for (String url : urls) {
+            navigationUrl = url;
+            driver.navigate().to(navigationUrl);
+            pageName = getPageNameFromUrl(navigationUrl);
+            System.out.println("Current URL: " + driver.getCurrentUrl());
+            if (!verifyAlly(pageName)) {
+                System.out.println("There are accessibility errors in : " + driver.getCurrentUrl());
+            } else {
+                System.out.println("There are no accessibility errors in : " + driver.getCurrentUrl());
+            }
         }
         driver.quit();
     }
 
+    private String getPageNameFromUrl(String url) {
+        if (url.contains("before/home.html")) {
+            return "BeforeAndAfter";
+        } else if (url.contains("broken-workshop.dequelabs.com")) {
+            return "BrokenWorkshop";
+        } else if (url.contains("dequeuniversity.com/demo/dream")) {
+            return "Dream";
+        } else if (url.contains("webtestingcourse.dequecloud.com")) {
+            return "WebTestingCourse";
+        } else if (url.contains("dequeuniversity.com/demo/mars")) {
+            return "Mars";
+        } else if (url.contains("calstatela.edu/drupaltraining/web-accessibility-demo")) {
+            return "WebAccessibilityDemo";
+        } else if (url.contains("iflysouthern.com")) {
+            return "Southern";
+        } else if (url.contains("jacaranda.com.au/shop")) {
+            return "JPQA";
+        } else {
+            return "Unknown";
+        }
+    }
     public static void webdriverInit(){
         ChromeOptions options = new ChromeOptions();
         options.setCapability("acceptInsecureCerts",true);
@@ -83,7 +95,7 @@ public class AccessibilityTest {
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] } }").analyze();
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } }").analyze();
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a'] } }").analyze();
-        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2aa'] } }").analyze();
+        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a'] } }").analyze();
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).analyze();
 
         JSONArray violations = responseJson.getJSONArray("violations");
