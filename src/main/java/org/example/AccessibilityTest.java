@@ -28,11 +28,25 @@ public class AccessibilityTest {
     private static final URL scriptUrl = AccessibilityTest.class.getResource("/axe.min.js");
     public static String navigationUrl;
     public static String pageName;
+    public static String tag;
+    public static String tagValue;
     public static String targetFolderFilePath = System.getProperty("user.dir") + "/target/";
 
 
     @Test
     public void verifyAllUrls() throws JSONException, InterruptedException {
+
+        List<String> tags = Arrays.asList(
+                "wcag2a",
+                "wcag2aa",
+                "wcag21a",
+                "wcag21aa",
+                "wcag22a",
+                "wcag22aa"
+        );
+
+        tag = "wcag2a";
+
         webdriverInit();
         List<String> urls = Arrays.asList(
                 "https://www.w3.org/WAI/demos/bad/before/home.html",
@@ -42,18 +56,22 @@ public class AccessibilityTest {
                 "https://dequeuniversity.com/demo/mars/",
                 "https://www.calstatela.edu/drupaltraining/web-accessibility-demo",
                 "https://www.iflysouthern.com/",
-                "https://www.jacaranda.com.au/shop/"
+                "https://nymag.com/",
+                "https://www.cbsnews.com/miami/",
+                "https://www.cbsnews.com/miami/"
         );
 
-        for (String url : urls) {
-            navigationUrl = url;
-            driver.navigate().to(navigationUrl);
-            pageName = getPageNameFromUrl(navigationUrl);
-            System.out.println("Current URL: " + driver.getCurrentUrl());
-            if (!verifyAlly(pageName)) {
-                System.out.println("There are accessibility errors in : " + driver.getCurrentUrl());
-            } else {
-                System.out.println("There are no accessibility errors in : " + driver.getCurrentUrl());
+        for (String tag : tags) {
+            this.tag = tag;
+            for (String url : urls) {
+                navigationUrl = url;
+                driver.navigate().to(navigationUrl);
+                pageName = getPageNameFromUrl(navigationUrl);
+                if (!verifyAlly(pageName, this.tag)) {
+                    System.out.println("There are "+tagValue+" accessibility errors :" + driver.getCurrentUrl());
+                } else {
+                    System.out.println("There are no "+tagValue+" accessibility errors :" + driver.getCurrentUrl());
+                }
             }
         }
         driver.quit();
@@ -89,22 +107,26 @@ public class AccessibilityTest {
         driver = new ChromeDriver(options);
     }
 
-    public static boolean verifyAlly(String page) throws JSONException, InterruptedException {
+    public static boolean verifyAlly(String page,String tag) throws JSONException, InterruptedException {
+
+        String options = "{ runOnly: { type: 'tag', values: ['"+tag+"'] } }";
+        JSONObject optionsJson = new JSONObject(options);
+        tagValue = optionsJson.getJSONObject("runOnly").getJSONArray("values").getString(0);
 
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{runOnly:['wcag21aa']}").analyze();
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] } }").analyze();
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } }").analyze();
-//        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a'] } }").analyze();
-        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag2a'] } }").analyze();
+        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options(options).analyze();
+//        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options("{ runOnly: { type: 'tag', values: ['wcag131'] } }").analyze();
 //        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).analyze();
 
         JSONArray violations = responseJson.getJSONArray("violations");
         if (violations.length() == 0 ) {
-            logger.info("There are no accessibility errors");
+            logger.info("There are no "+tagValue+" accessibility errors");
             passStatus = true;
         } else {
             logger.error("******* VIOLATIONS *******");
-            AXE.writeResults(targetFolderFilePath + page + "allyTestReport", violations);
+            AXE.writeResults(targetFolderFilePath + tagValue + page + "allyTestReport", violations);
             axeJsonToHtml(violations,page);
             Thread.sleep(6000);
             passStatus = false;
@@ -113,7 +135,7 @@ public class AccessibilityTest {
     }
 
     public static void axeJsonToHtml(JSONArray violations,String page){
-        try (FileWriter file = new FileWriter(targetFolderFilePath+page+"allyTestReport.html")) {
+        try (FileWriter file = new FileWriter(targetFolderFilePath+tagValue+page+"allyTestReport.html")) {
             file.write("<html><head><title>Accessibility Report</title></head><body>");
             file.write("<h1>Accessibility Violations</h1>");
             for (int i = 0; i < violations.length(); i++) {
