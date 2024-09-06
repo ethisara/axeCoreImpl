@@ -11,7 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -34,17 +36,9 @@ public class AccessibilityTest {
 
 
     @Test
-    public void verifyAllUrls() throws JSONException, InterruptedException {
+    public void verifyAllUrlsForListOfTags() throws JSONException, InterruptedException {
 
         webdriverInit();
-//        List<String> tags = Arrays.asList(
-//                "wcag2a",
-//                "wcag2aa",
-//                "wcag21a",
-//                "wcag21aa",
-//                "wcag22a",
-//                "wcag22aa"
-//        );
 
         List<String> tags = Arrays.asList("wcag247", "wcag2411", "wcag257", "wcag326", "wcag337", "wcag339", "wcag134", "wcag135", "wcag1410", "wcag1411", "wcag1412", "wcag214", "wcag251", "wcag254", "wcag256", "wcag111", "wcag124", "wcag125", "wcag131", "wcag132", "wcag133", "wcag143", "wcag144", "wcag145", "wcag211", "wcag212", "wcag243", "wcag244", "wcag246", "wcag247", "wcag312", "wcag323", "wcag324", "wcag333", "wcag334");
 
@@ -61,21 +55,66 @@ public class AccessibilityTest {
 //                "https://www.cbsnews.com/miami/"
         );
 
-        for (String tag : tags) {
-            this.tag = tag;
-            for (String url : urls) {
+        for (String url : urls) {
+            navigationUrl = url;
 
-                navigationUrl = url;
+            for (String tag : tags) {
+                this.tag = tag;
+
                 driver.navigate().to(navigationUrl);
 
                 // Get the page name for the report
                 pageName = getPageNameFromUrl(navigationUrl);
 
                 // Accessibikity verification
-                if (!verifyAlly(pageName, this.tag)) {
-                    System.out.println("There are "+tagValue+" accessibility errors :" + driver.getCurrentUrl());
+                if (!verifyAllyForListOfTags(pageName, this.tag)) {
+                    System.out.println("There are "+tagValue+" accessibility errors in :" + driver.getCurrentUrl());
                 } else {
-                    System.out.println("There are no "+tagValue+" accessibility errors :" + driver.getCurrentUrl());
+                    System.out.println("There are NO "+tagValue+" accessibility errors in :" + driver.getCurrentUrl());
+                }
+            }
+        }
+        driver.quit();
+    }
+
+    @Test
+    public void verifyAllUrlsForSelectedTags() throws JSONException, InterruptedException {
+
+        webdriverInit();
+
+        List<String> tags = Arrays.asList("wcag244","wcag131","wcag143");
+        String tagsString = String.join("', '", tags);
+        tagsString = "'" + tagsString + "'";
+
+        List<String> urls = Arrays.asList(
+                "https://www.w3.org/WAI/demos/bad/before/home.html",
+                "https://broken-workshop.dequelabs.com/"
+//                "https://dequeuniversity.com/demo/dream",
+//                "https://webtestingcourse.dequecloud.com/",
+//                "https://dequeuniversity.com/demo/mars/",
+//                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo",
+//                "https://www.iflysouthern.com/"
+//                "https://nymag.com/",
+//                "https://www.cbsnews.com/miami/",
+//                "https://www.cbsnews.com/miami/"
+        );
+
+        for (String url : urls) {
+            navigationUrl = url;
+
+            for (String tag : tags) {
+                this.tag = tagsString;
+
+                driver.navigate().to(navigationUrl);
+
+                // Get the page name for the report
+                pageName = getPageNameFromUrl(navigationUrl);
+
+                // Accessibikity verification
+                if (!verifyAllyForSelectedTags(pageName, this.tag)) {
+                    System.out.println("There are accessibility errors in :" + driver.getCurrentUrl());
+                } else {
+                    System.out.println("There are NO accessibility errors in :" + driver.getCurrentUrl());
                 }
             }
         }
@@ -84,23 +123,23 @@ public class AccessibilityTest {
 
     // Geting the page name from the URL
     private String getPageNameFromUrl(String url) {
-        if (url.contains("before/home.html")) {
-            return "BeforeAndAfter";
-        } else if (url.contains("broken-workshop.dequelabs.com")) {
-            return "BrokenWorkshop";
-        } else if (url.contains("dequeuniversity.com/demo/dream")) {
-            return "Dream";
-        } else if (url.contains("webtestingcourse.dequecloud.com")) {
-            return "WebTestingCourse";
-        } else if (url.contains("dequeuniversity.com/demo/mars")) {
-            return "Mars";
-        } else if (url.contains("calstatela.edu/drupaltraining/web-accessibility-demo")) {
-            return "WebAccessibilityDemo";
-        } else if (url.contains("iflysouthern.com")) {
-            return "Southern";
-        } else {
-            return "Unknown";
+        Map<String, String> urlToPageName = new HashMap<>();
+        urlToPageName.put("before/home.html", "BeforeAndAfter");
+        urlToPageName.put("broken-workshop.dequelabs.com", "BrokenWorkshop");
+        urlToPageName.put("dequeuniversity.com/demo/dream", "Dream");
+        urlToPageName.put("webtestingcourse.dequecloud.com", "WebTestingCourse");
+        urlToPageName.put("dequeuniversity.com/demo/mars", "Mars");
+        urlToPageName.put("calstatela.edu/drupaltraining/web-accessibility-demo", "WebAccessibilityDemo");
+        urlToPageName.put("iflysouthern.com", "Southern");
+
+        for (Map.Entry<String, String> entry : urlToPageName.entrySet()) {
+            if (url.contains(entry.getKey())) {
+                return entry.getValue();
+            }
         }
+
+        return "Unknown";
+
     }
     public static void webdriverInit(){
         ChromeOptions options = new ChromeOptions();
@@ -112,10 +151,34 @@ public class AccessibilityTest {
     }
 
     // Accessibility verification
-    public static boolean verifyAlly(String page,String tag) throws JSONException, InterruptedException {
+    public static boolean verifyAllyForListOfTags(String page,String tag) throws JSONException, InterruptedException {
 
         // Implementation of the tag value
         String options = "{ runOnly: { type: 'tag', values: ['"+tag+"'] } }";
+        JSONObject optionsJson = new JSONObject(options);
+        tagValue = optionsJson.getJSONObject("runOnly").getJSONArray("values").getString(0);
+
+        // Accessibility verification
+        JSONObject responseJson = new AXE.Builder(driver, scriptUrl).options(options).analyze();
+        JSONArray violations = responseJson.getJSONArray("violations");
+
+        if (violations.length() == 0 ) {
+            logger.info("There are no "+tagValue+" accessibility errors");
+            passStatus = true;
+        } else {
+            logger.error("******* VIOLATIONS *******");
+            AXE.writeResults(targetFolderFilePath + tagValue + page + "allyTestReport", violations);
+            axeJsonToHtml(violations,page);
+            Thread.sleep(6000);
+            passStatus = false;
+        }
+        return passStatus;
+    }
+
+    public static boolean verifyAllyForSelectedTags(String page,String tag) throws JSONException, InterruptedException {
+
+        // Implementation of the tag value
+        String options = "{ runOnly: { type: 'tag', values: ["+tag+"] } }";
         JSONObject optionsJson = new JSONObject(options);
         tagValue = optionsJson.getJSONObject("runOnly").getJSONArray("values").getString(0);
 
