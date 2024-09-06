@@ -46,43 +46,7 @@ public class AccessibilityTest {
 //                "wcag22aa"
 //        );
 
-        List<String> tags = Arrays.asList(
-                "wcag247",
-                "wcag2411",
-                "wcag257",
-                "wcag326",
-                "wcag337",
-                "wcag339",
-                "wcag134",
-                "wcag135",
-                "wcag1410",
-                "wcag1411",
-                "wcag1412",
-                "wcag214",
-                "wcag251",
-                "wcag254",
-                "wcag256",
-                "wcag111",
-                "wcag124",
-                "wcag125",
-                "wcag131",
-                "wcag132",
-                "wcag133",
-                "wcag143",
-                "wcag144",
-                "wcag145",
-                "wcag211",
-                "wcag212",
-                "wcag243",
-                "wcag244",
-                "wcag246",
-                "wcag247",
-                "wcag312",
-                "wcag323",
-                "wcag324",
-                "wcag333",
-                "wcag334"
-        );
+        List<String> tags = Arrays.asList("wcag247", "wcag2411", "wcag257", "wcag326", "wcag337", "wcag339", "wcag134", "wcag135", "wcag1410", "wcag1411", "wcag1412", "wcag214", "wcag251", "wcag254", "wcag256", "wcag111", "wcag124", "wcag125", "wcag131", "wcag132", "wcag133", "wcag143", "wcag144", "wcag145", "wcag211", "wcag212", "wcag243", "wcag244", "wcag246", "wcag247", "wcag312", "wcag323", "wcag324", "wcag333", "wcag334");
 
         List<String> urls = Arrays.asList(
                 "https://www.w3.org/WAI/demos/bad/before/home.html",
