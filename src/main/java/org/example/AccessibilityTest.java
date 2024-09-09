@@ -45,13 +45,12 @@ public class AccessibilityTest {
         List<String> urls = Arrays.asList(
                 "https://www.w3.org/WAI/demos/bad/before/home.html",
                 "https://broken-workshop.dequelabs.com/",
-                "https://dequeuniversity.com/demo/dream",
-                "https://webtestingcourse.dequecloud.com/",
-                "https://dequeuniversity.com/demo/mars/",
-                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo",
-                "https://www.iflysouthern.com/"
+                "https://dequeuniversity.com/demo/dream"
+//                "https://webtestingcourse.dequecloud.com/",
+//                "https://dequeuniversity.com/demo/mars/",
+//                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo",
+//                "https://www.iflysouthern.com/",
 //                "https://nymag.com/",
-//                "https://www.cbsnews.com/miami/",
 //                "https://www.cbsnews.com/miami/"
         );
 
@@ -66,7 +65,7 @@ public class AccessibilityTest {
                 // Get the page name for the report
                 pageName = getPageNameFromUrl(navigationUrl);
 
-                // Accessibikity verification
+                // Accessibility verification
                 if (!verifyAllyForListOfTags(pageName, this.tag)) {
                     System.out.println("There are "+tagValue+" accessibility errors in :" + driver.getCurrentUrl());
                 } else {
@@ -131,6 +130,8 @@ public class AccessibilityTest {
         urlToPageName.put("dequeuniversity.com/demo/mars", "Mars");
         urlToPageName.put("calstatela.edu/drupaltraining/web-accessibility-demo", "WebAccessibilityDemo");
         urlToPageName.put("iflysouthern.com", "Southern");
+        urlToPageName.put("nymag.com", "nymag");
+        urlToPageName.put("cbsnews.com/miami", "cbsnews");
 
         for (Map.Entry<String, String> entry : urlToPageName.entrySet()) {
             if (url.contains(entry.getKey())) {

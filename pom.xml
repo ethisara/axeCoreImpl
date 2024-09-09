@@ -8,39 +8,26 @@
     <artifactId>axeCoreImpl</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <testng.version>7.3.0</testng.version>
-        <selenium.version>3.141.59</selenium.version>
-        <cucumber.version>6.7.0</cucumber.version>
-        <webdrivermanager.version>4.2.2</webdrivermanager.version>
-        <maven.compiler.version>3.6.1</maven.compiler.version>
-        <browserstack.version>1.0.3</browserstack.version>
-        <restassured.version>4.2.0</restassured.version>
-        <mysql.version>5.1.48</mysql.version>
-        <slf4japi.version>1.7.30</slf4japi.version>
-        <logbackcore.version>1.2.11</logbackcore.version>
-        <logbackclassic.version>1.2.11</logbackclassic.version>
-        <cucumber.reporting>5.5.2</cucumber.reporting>
-    </properties>
+    <!--&lt;!&ndash;    <properties>&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;        <selenium.version>4.0.0</selenium.version>&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;        <webdrivermanager.version>4.2.2</webdrivermanager.version>&ndash;&gt;-->
+    <!--&lt;!&ndash;        <slf4japi.version>1.7.30</slf4japi.version>&ndash;&gt;-->
+    <!--&lt;!&ndash;    -->
+    <!--    </properties>-->
 
     <dependencies>
-        <dependency>
-            <groupId>com.deque</groupId>
-            <artifactId>axe-selenium</artifactId>
-            <version>3.0</version>
-        </dependency>
 
-
-        <!-- https://mvnrepository.com/artifact/com.deque.html.axe-core/selenium -->
+        <!--                 https://mvnrepository.com/artifact/com.deque.html.axe-core/selenium -->
         <dependency>
             <groupId>com.deque.html.axe-core</groupId>
             <artifactId>selenium</artifactId>
             <version>4.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.deque</groupId>
+            <artifactId>axe-selenium</artifactId>
+            <version>3.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
@@ -71,7 +58,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4japi.version}</version>
+            <version>1.7.30</version>
         </dependency>
 
         <dependency>
