@@ -10,10 +10,7 @@ import org.openqa.selenium.WebDriver;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -25,7 +22,7 @@ import static org.testng.Assert.assertTrue;
 
 public class AccessibilityTest {
     public static WebDriver driver = null;
-    private static boolean passStatus = true;
+    private static boolean passStatus = false;
     private static final Logger logger = LoggerFactory.getLogger(AccessibilityTest.class);
     private static final URL scriptUrl = AccessibilityTest.class.getResource("/axe.min.js");
     public static String navigationUrl;
@@ -34,42 +31,58 @@ public class AccessibilityTest {
     public static String tagValue;
     public static String targetFolderFilePath = System.getProperty("user.dir") + "/target/";
 
+    public static  List<String> urls = Arrays.asList();
 
-    @Test
-    public void verifyAllUrlsForListOfTags() throws JSONException, InterruptedException {
 
-        webdriverInit();
-
-        List<String> tags = Arrays.asList("wcag247", "wcag2411", "wcag257", "wcag326", "wcag337", "wcag339", "wcag134", "wcag135", "wcag1410", "wcag1411", "wcag1412", "wcag214", "wcag251", "wcag254", "wcag256", "wcag111", "wcag124", "wcag125", "wcag131", "wcag132", "wcag133", "wcag143", "wcag144", "wcag145", "wcag211", "wcag212", "wcag243", "wcag244", "wcag246", "wcag247", "wcag312", "wcag323", "wcag324", "wcag333", "wcag334");
-
-        List<String> urls = Arrays.asList(
+    public static void setUrls(){
+        urls = Arrays.asList(
                 "https://www.w3.org/WAI/demos/bad/before/home.html",
-                "https://broken-workshop.dequelabs.com/",
-                "https://dequeuniversity.com/demo/dream"
+                "https://www.w3.org/WAI/demos/bad/before/news.html",
+                "https://www.w3.org/WAI/demos/bad/before/tickets.html",
+                "https://www.w3.org/WAI/demos/bad/before/survey.html",
+                "https://www.w3.org/WAI/demos/bad/before/template.html"
+//                "https://broken-workshop.dequelabs.com/",
+//                "https://dequeuniversity.com/demo/dream",
 //                "https://webtestingcourse.dequecloud.com/",
 //                "https://dequeuniversity.com/demo/mars/",
-//                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo",
+//                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo"
 //                "https://www.iflysouthern.com/",
 //                "https://nymag.com/",
 //                "https://www.cbsnews.com/miami/"
         );
+    }
+    @Test
+    public void verifyAllUrlsForListOfTags() throws JSONException, InterruptedException {
+
+        webdriverInit();
+        setUrls();
+
+//        List<String> tags = Arrays.asList("wcag247", "wcag2411", "wcag257", "wcag326", "wcag337", "wcag339", "wcag134", "wcag135", "wcag1410", "wcag1411", "wcag1412", "wcag214", "wcag251", "wcag254", "wcag256", "wcag111", "wcag124", "wcag125", "wcag131", "wcag132", "wcag133", "wcag143", "wcag144", "wcag145", "wcag211", "wcag212", "wcag243", "wcag244", "wcag246", "wcag247", "wcag312", "wcag323", "wcag324", "wcag333", "wcag334");
+//        List<String> tags = Arrays.asList("wcag124", "wcag125", "wcag143", "wcag144", "wcag145", "wcag245", "wcag246", "wcag247", "wcag312", "wcag323", "wcag324", "wcag333", "wcag334", "wcag134", "wcag135", "wcag1410", "wcag1411", "wcag1412", "wcag1413", "wcag214", "wcag251", "wcag254", "wcag255", "wcag256", "wcag413", "wcag2411", "wcag2412", "wcag257", "wcag258", "wcag326", "wcag337", "wcag338", "wcag339");
+
+        List<String> wcag20tags = Arrays.asList("wcag244", "wcag412", "wcag111", "wcag131", "wcag222", "wcag241", "wcag143", "wcag242", "wcag332", "wcag312", "wcag122", "wcag135", "wcag1412", "wcag258");
+        List<String> wcag21tags = Arrays.asList("wcag135", "wcag1412");
+        List<String> wcag22tags = Arrays.asList("wcag258");
+        List<String> bestPracticestags = Arrays.asList("best-practice","cat.aria","cat.name-role-value","cat.structure","review-item","cat.text-alternatives");
+
+        List<String> combinedList = new ArrayList<>();
+        combinedList.addAll(wcag20tags);
+        combinedList.addAll(wcag21tags);
+        combinedList.addAll(wcag22tags);
+//        combinedList.addAll(bestPracticestags);
 
         for (String url : urls) {
             navigationUrl = url;
-
-            for (String tag : tags) {
+            driver.navigate().to(navigationUrl);
+            for (String tag : combinedList) {
                 this.tag = tag;
-
-                driver.navigate().to(navigationUrl);
 
                 // Get the page name for the report
                 pageName = getPageNameFromUrl(navigationUrl);
 
                 // Accessibility verification
                 if (!verifyAllyForListOfTags(pageName, this.tag)) {
-                    System.out.println("There are "+tagValue+" accessibility errors in :" + driver.getCurrentUrl());
-                } else {
-                    System.out.println("There are NO "+tagValue+" accessibility errors in :" + driver.getCurrentUrl());
+                    System.out.println("There are " +tagValue+ " accessibility errors in :" + driver.getCurrentUrl() +"\n");
                 }
             }
         }
@@ -80,40 +93,24 @@ public class AccessibilityTest {
     public void verifyAllUrlsForSelectedTags() throws JSONException, InterruptedException {
 
         webdriverInit();
-
-        List<String> tags = Arrays.asList("wcag244","wcag131","wcag143");
+        setUrls();
+        List<String> tags = Arrays.asList("wcag2aa","wcag2a","wcag21a","wcag21aa","wcag22aa");
         String tagsString = String.join("', '", tags);
         tagsString = "'" + tagsString + "'";
 
-        List<String> urls = Arrays.asList(
-                "https://www.w3.org/WAI/demos/bad/before/home.html",
-                "https://broken-workshop.dequelabs.com/"
-//                "https://dequeuniversity.com/demo/dream",
-//                "https://webtestingcourse.dequecloud.com/",
-//                "https://dequeuniversity.com/demo/mars/",
-//                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo",
-//                "https://www.iflysouthern.com/"
-//                "https://nymag.com/",
-//                "https://www.cbsnews.com/miami/",
-//                "https://www.cbsnews.com/miami/"
-        );
-
         for (String url : urls) {
             navigationUrl = url;
+            driver.navigate().to(navigationUrl);
 
             for (String tag : tags) {
                 this.tag = tagsString;
-
-                driver.navigate().to(navigationUrl);
 
                 // Get the page name for the report
                 pageName = getPageNameFromUrl(navigationUrl);
 
                 // Accessibikity verification
                 if (!verifyAllyForSelectedTags(pageName, this.tag)) {
-                    System.out.println("There are accessibility errors in :" + driver.getCurrentUrl());
-                } else {
-                    System.out.println("There are NO accessibility errors in :" + driver.getCurrentUrl());
+                    System.out.println("There are " +tagValue+ " accessibility errors in :" + driver.getCurrentUrl() +"\n");
                 }
             }
         }
@@ -123,7 +120,7 @@ public class AccessibilityTest {
     // Geting the page name from the URL
     private String getPageNameFromUrl(String url) {
         Map<String, String> urlToPageName = new HashMap<>();
-        urlToPageName.put("before/home.html", "BeforeAndAfter");
+        urlToPageName.put("before/home.html", "home");
         urlToPageName.put("broken-workshop.dequelabs.com", "BrokenWorkshop");
         urlToPageName.put("dequeuniversity.com/demo/dream", "Dream");
         urlToPageName.put("webtestingcourse.dequecloud.com", "WebTestingCourse");
@@ -131,7 +128,10 @@ public class AccessibilityTest {
         urlToPageName.put("calstatela.edu/drupaltraining/web-accessibility-demo", "WebAccessibilityDemo");
         urlToPageName.put("iflysouthern.com", "Southern");
         urlToPageName.put("nymag.com", "nymag");
-        urlToPageName.put("cbsnews.com/miami", "cbsnews");
+        urlToPageName.put("before/news.html", "news");
+        urlToPageName.put("before/tickets.html", "tickets");
+        urlToPageName.put("before/survey.html", "survey");
+        urlToPageName.put("before/template.html", "template");
 
         for (Map.Entry<String, String> entry : urlToPageName.entrySet()) {
             if (url.contains(entry.getKey())) {
@@ -168,10 +168,14 @@ public class AccessibilityTest {
             passStatus = true;
         } else {
             logger.error("******* VIOLATIONS *******");
-            AXE.writeResults(targetFolderFilePath + tagValue + page + "allyTestReport", violations);
+            AXE.writeResults(targetFolderFilePath + tagValue + " " + page + "allyTestReport", violations);
             axeJsonToHtml(violations,page);
             Thread.sleep(6000);
             passStatus = false;
+            for (int i = 0; i < violations.length(); i++) {
+                JSONObject violation = violations.getJSONObject(i);
+                System.out.println((i + 1) + ". " + violation.getString("description"));
+            }
         }
         return passStatus;
     }
@@ -192,17 +196,21 @@ public class AccessibilityTest {
             passStatus = true;
         } else {
             logger.error("******* VIOLATIONS *******");
-            AXE.writeResults(targetFolderFilePath + tagValue + page + "allyTestReport", violations);
+            AXE.writeResults(targetFolderFilePath + tagValue + " " + page + "allyTestReport", violations);
             axeJsonToHtml(violations,page);
             Thread.sleep(6000);
             passStatus = false;
+            for (int i = 0; i < violations.length(); i++) {
+                JSONObject violation = violations.getJSONObject(i);
+                System.out.println((i + 1) + ". " + violation.getString("description"));
+            }
         }
         return passStatus;
     }
 
     // Convert JSON to HTML report
     public static void axeJsonToHtml(JSONArray violations,String page){
-        try (FileWriter file = new FileWriter(targetFolderFilePath+tagValue+page+"allyTestReport.html")) {
+        try (FileWriter file = new FileWriter(targetFolderFilePath+tagValue+" "+page+"allyTestReport.html")) {
             file.write("<html><head><title>Accessibility Report</title></head><body>");
             file.write("<h1>Accessibility Violations</h1>");
             for (int i = 0; i < violations.length(); i++) {
