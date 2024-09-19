@@ -17,12 +17,12 @@
 
     <dependencies>
 
-        <!--                 https://mvnrepository.com/artifact/com.deque.html.axe-core/selenium -->
-        <dependency>
-            <groupId>com.deque.html.axe-core</groupId>
-            <artifactId>selenium</artifactId>
-            <version>4.7.0</version>
-        </dependency>
+<!--        &lt;!&ndash;                 https://mvnrepository.com/artifact/com.deque.html.axe-core/selenium &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.deque.html.axe-core</groupId>-->
+<!--            <artifactId>selenium</artifactId>-->
+<!--            <version>4.7.0</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.deque</groupId>

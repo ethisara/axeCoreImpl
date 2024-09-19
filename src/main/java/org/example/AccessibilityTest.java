@@ -17,8 +17,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.testng.Assert.assertTrue;
-
 
 public class AccessibilityTest {
     public static WebDriver driver = null;
@@ -36,16 +34,16 @@ public class AccessibilityTest {
 
     public static void setUrls(){
         urls = Arrays.asList(
-                "https://www.w3.org/WAI/demos/bad/before/home.html",
-                "https://www.w3.org/WAI/demos/bad/before/news.html",
-                "https://www.w3.org/WAI/demos/bad/before/tickets.html",
-                "https://www.w3.org/WAI/demos/bad/before/survey.html",
-                "https://www.w3.org/WAI/demos/bad/before/template.html"
-//                "https://broken-workshop.dequelabs.com/",
-//                "https://dequeuniversity.com/demo/dream",
-//                "https://webtestingcourse.dequecloud.com/",
-//                "https://dequeuniversity.com/demo/mars/",
-//                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo"
+//                "https://www.w3.org/WAI/demos/bad/before/home.html",
+//                "https://www.w3.org/WAI/demos/bad/before/news.html",
+//                "https://www.w3.org/WAI/demos/bad/before/tickets.html",
+//                "https://www.w3.org/WAI/demos/bad/before/survey.html",
+//                "https://www.w3.org/WAI/demos/bad/before/template.html",
+                "https://broken-workshop.dequelabs.com/",
+                "https://dequeuniversity.com/demo/dream",
+                "https://webtestingcourse.dequecloud.com/",
+                "https://dequeuniversity.com/demo/mars/",
+                "https://www.calstatela.edu/drupaltraining/web-accessibility-demo"
 //                "https://www.iflysouthern.com/",
 //                "https://nymag.com/",
 //                "https://www.cbsnews.com/miami/"
@@ -56,9 +54,6 @@ public class AccessibilityTest {
 
         webdriverInit();
         setUrls();
-
-//        List<String> tags = Arrays.asList("wcag247", "wcag2411", "wcag257", "wcag326", "wcag337", "wcag339", "wcag134", "wcag135", "wcag1410", "wcag1411", "wcag1412", "wcag214", "wcag251", "wcag254", "wcag256", "wcag111", "wcag124", "wcag125", "wcag131", "wcag132", "wcag133", "wcag143", "wcag144", "wcag145", "wcag211", "wcag212", "wcag243", "wcag244", "wcag246", "wcag247", "wcag312", "wcag323", "wcag324", "wcag333", "wcag334");
-//        List<String> tags = Arrays.asList("wcag124", "wcag125", "wcag143", "wcag144", "wcag145", "wcag245", "wcag246", "wcag247", "wcag312", "wcag323", "wcag324", "wcag333", "wcag334", "wcag134", "wcag135", "wcag1410", "wcag1411", "wcag1412", "wcag1413", "wcag214", "wcag251", "wcag254", "wcag255", "wcag256", "wcag413", "wcag2411", "wcag2412", "wcag257", "wcag258", "wcag326", "wcag337", "wcag338", "wcag339");
 
         List<String> wcag20tags = Arrays.asList("wcag244", "wcag412", "wcag111", "wcag131", "wcag222", "wcag241", "wcag143", "wcag242", "wcag332", "wcag312", "wcag122", "wcag135", "wcag1412", "wcag258");
         List<String> wcag21tags = Arrays.asList("wcag135", "wcag1412");
@@ -117,31 +112,6 @@ public class AccessibilityTest {
         driver.quit();
     }
 
-    // Geting the page name from the URL
-    private String getPageNameFromUrl(String url) {
-        Map<String, String> urlToPageName = new HashMap<>();
-        urlToPageName.put("before/home.html", "home");
-        urlToPageName.put("broken-workshop.dequelabs.com", "BrokenWorkshop");
-        urlToPageName.put("dequeuniversity.com/demo/dream", "Dream");
-        urlToPageName.put("webtestingcourse.dequecloud.com", "WebTestingCourse");
-        urlToPageName.put("dequeuniversity.com/demo/mars", "Mars");
-        urlToPageName.put("calstatela.edu/drupaltraining/web-accessibility-demo", "WebAccessibilityDemo");
-        urlToPageName.put("iflysouthern.com", "Southern");
-        urlToPageName.put("nymag.com", "nymag");
-        urlToPageName.put("before/news.html", "news");
-        urlToPageName.put("before/tickets.html", "tickets");
-        urlToPageName.put("before/survey.html", "survey");
-        urlToPageName.put("before/template.html", "template");
-
-        for (Map.Entry<String, String> entry : urlToPageName.entrySet()) {
-            if (url.contains(entry.getKey())) {
-                return entry.getValue();
-            }
-        }
-
-        return "Unknown";
-
-    }
     public static void webdriverInit(){
         ChromeOptions options = new ChromeOptions();
         options.setCapability("acceptInsecureCerts",true);
@@ -151,7 +121,7 @@ public class AccessibilityTest {
         driver = new ChromeDriver(options);
     }
 
-    // Accessibility verification
+    // Accessibility verification for all tags
     public static boolean verifyAllyForListOfTags(String page,String tag) throws JSONException, InterruptedException {
 
         // Implementation of the tag value
@@ -180,6 +150,7 @@ public class AccessibilityTest {
         return passStatus;
     }
 
+    // Accessibility verification for selected tags
     public static boolean verifyAllyForSelectedTags(String page,String tag) throws JSONException, InterruptedException {
 
         // Implementation of the tag value
@@ -231,5 +202,30 @@ public class AccessibilityTest {
         }
     }
 
+    // Setting the page name from the URL
+    private String getPageNameFromUrl(String url) {
+        Map<String, String> urlToPageName = new HashMap<>();
+        urlToPageName.put("before/home.html", "home ");
+        urlToPageName.put("broken-workshop.dequelabs.com", "Broken Workshop ");
+        urlToPageName.put("dequeuniversity.com/demo/dream", "Dream ");
+        urlToPageName.put("webtestingcourse.dequecloud.com", "Web Testing Course ");
+        urlToPageName.put("dequeuniversity.com/demo/mars", "Mars ");
+        urlToPageName.put("calstatela.edu/drupaltraining/web-accessibility-demo", "Web Accessibility Demo ");
+        urlToPageName.put("iflysouthern.com", "Southern ");
+        urlToPageName.put("nymag.com", "ny mag ");
+        urlToPageName.put("before/news.html", "news ");
+        urlToPageName.put("before/tickets.html", "tickets ");
+        urlToPageName.put("before/survey.html", "survey ");
+        urlToPageName.put("before/template.html", "template ");
+
+        for (Map.Entry<String, String> entry : urlToPageName.entrySet()) {
+            if (url.contains(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+
+        return "Unknown";
+
+    }
 
 }
